@@ -5,16 +5,29 @@ window = Tk()
 window.resizable(False, False)
 window.title('Tic Tac Toe')
 current_chr = "X"
-play_area = Frame(window, width=300, height=300, bg='White')
+play_area = Frame(window, width=400, height=500, bg='White')
+window.geometry("350x400")
 X_points = []
 O_points = []
 XO_points = []
 
 
+def play_again():
+    global current_chr
+    current_chr = 'X'
+    for point in XO_points:
+        point.button.configure(state=NORMAL)
+        point.reset()
+    play_again_button.pack_forget()
+
+
+play_again_button = Button(window, text="Play again", command=play_again)
+
+
 def disable_game():
     for point in XO_points:
         point.button.configure(state=DISABLED)
-
+    play_again_button.pack()
 
 class XOPoints:
     def __init__(self, x, y):
@@ -104,22 +117,14 @@ winning_possibility = [
 def check_win():
     for possibility in winning_possibility:
         if possibility.check('X'):
+            messagebox.askokcancel('Info', 'Winner is X')
             disable_game()
-            msg_box = messagebox.askyesno('Info', 'X is winner\nDo you want again?')
-            if msg_box == 'yes':
-                play_again()
-            if msg_box == 'no':
-                disable_game()
         elif possibility.check('O'):
+            messagebox.askokcancel('Info', "O is a winner!")
             disable_game()
-            msg_box = messagebox.askyesno('Info', 'X is winner\nDo you want again?')
-            if msg_box == 'yes':
-                play_again()
-            if msg_box == 'no':
-                disable_game()
 
     if len(X_points) + len(O_points) == 9:
-        print("Draw!")
+        messagebox.askokcancel('Info', "It's a draw")
         disable_game()
 
 
